@@ -1,0 +1,27 @@
+--- .venv/lib/python3.12/site-packages/openai/_base_client.py.orig	2025-08-14 09:15:25
++++ .venv/lib/python3.12/site-packages/openai/_base_client.py	2025-08-14 09:19:46
+@@ -62,6 +62,14 @@
+     HttpxRequestFiles,
+     ModelBuilderProtocol,
+ )
++import sys
++
++def _safe_print(obj):
++    try:
++        print(obj)
++    except UnicodeEncodeError:
++        sys.stdout.buffer.write((str(obj) + "\n").encode("utf-8", errors="replace"))
++
+ from ._utils import SensitiveHeadersFilter, is_dict, is_list, asyncify, is_given, lru_cache, is_mapping
+ from ._compat import model_copy, model_dump
+ from ._models import GenericModel, FinalRequestOptions, validate_type, construct_type
+@@ -111,7 +119,8 @@
+     except ImportError:
+         # taken from https://github.com/encode/httpx/blob/3ba5fe0d7ac70222590e759c31442b1cab263791/httpx/_config.py#L366
+         HTTPX_DEFAULT_TIMEOUT = Timeout(5.0)
+-
++def __repr__(self):
++    return str(self).encode("utf-8", errors="replace").decode()
+ 
+ class PageInfo:
+     """Stores the necessary information to build the request to retrieve the next page.
