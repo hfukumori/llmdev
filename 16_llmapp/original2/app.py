@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import uuid
-from flask import Flask, render_template, request, make_response, session 
+from flask import Flask, render_template, request, make_response, session, redirect, url_for 
 from chatbot import Chatbot
 
 import logging
@@ -49,9 +49,7 @@ def clear():
     thread_id = session.pop('thread_id', None)
     # ボットのメモリをクリア
     chatbot.clear_memory(thread_id)
-    # 対話履歴を初期化
-    response = make_response(render_template('index.html', messages=[]))
-    return response
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
