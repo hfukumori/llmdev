@@ -16,13 +16,10 @@ os.environ['OPENAI_API_KEY'] = os.environ['API_KEY']
 client = OpenAI()
 
 class Chatbot:
-    def __init__(self, thread_id):
+    def __init__(self):
         self.memory = {}  # thread_idごとの対話履歴を保持する辞書
-        self.thread_id = thread_id
-        logger.info("Chatbot initialized with thread_id=%s", thread_id)
 
-    def update_messages(self, user_message):
-        thread_id = self.thread_id
+    def update_messages(self, thread_id, user_message):
         thread = self.memory.setdefault(thread_id, self.get_initial_thread())
 
         # ユーザーメッセージをスレッドに追加
@@ -46,9 +43,9 @@ class Chatbot:
 
         return bot_response
 
-    def get_messages(self):
-        messages_in_memory = self.memory.get(self.thread_id, [])
-        logger.debug("Retrieved messages_in_memory for thread_id=%s: %s", self.thread_id, messages_in_memory)
+    def get_messages(self, thread_id):
+        messages_in_memory = self.memory.get(thread_id, [])
+        logger.debug("Retrieved messages_in_memory for thread_id=%s: %s", thread_id, messages_in_memory)
         messages = []
         for mim in messages_in_memory:
             if (mim["role"] == "user"):
@@ -57,12 +54,12 @@ class Chatbot:
                 messages.append({'class': 'bot-message', 'text': mim["content"].replace('\n', '<br>')})
         return messages
     
-    def clear_memory(self):
-        if self.thread_id in self.memory:
-            del self.memory[self.thread_id]
-            logger.info("Cleared memory for thread_id=%s", self.thread_id)
+    def clear_memory(self, thread_id):
+        if thread_id in self.memory:
+            del self.memory[thread_id]
+            logger.info("Cleared memory for thread_id=%s", thread_id)
         else:
-            logger.info("No memory to clear for thread_id=%s", self.thread_id)
+            logger.info("No memory to clear for thread_id=%s", thread_id)
 
     def get_initial_thread(self):
         return [{"role": "system", "content": "You are a helpful assistant."}]
