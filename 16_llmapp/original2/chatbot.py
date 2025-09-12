@@ -46,12 +46,13 @@ class Chatbot:
     def get_messages(self, thread_id):
         messages_in_memory = self.memory.get(thread_id, [])
         logger.debug("Retrieved messages_in_memory for thread_id=%s: %s", thread_id, messages_in_memory)
+
         messages = []
-        for mim in messages_in_memory:
-            if (mim["role"] == "user"):
-                messages.append({'class': 'user-message', 'text': mim["content"].replace('\n', '<br>')})
-            elif (mim["role"] == "assistant"):
-                messages.append({'class': 'bot-message', 'text': mim["content"].replace('\n', '<br>')})
+        for message in messages_in_memory:
+            if (message["role"] == "user" or message["role"] == "assistant"):
+                class_name = 'user-message' if message["role"] == "user" else 'bot-message'
+                messages.append({'class': class_name, 'text': message["content"].replace('\n', '<br>')})
+
         return messages
     
     def clear_memory(self, thread_id):
