@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import uuid
 from flask import Flask, render_template, request, make_response, session, redirect, url_for 
-from chatbot import Chatbot
+from chatbot_completions import Chatbot
 
 import logging
 

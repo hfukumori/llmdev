@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import logging
 
+INITIAL_PROMPT = """You are a helpful assistant."""
+
 if not logging.getLogger().hasHandlers():
     logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)    
@@ -63,4 +65,4 @@ class Chatbot:
             logger.info("No memory to clear for thread_id=%s", thread_id)
 
     def get_initial_thread(self):
-        return [{"role": "system", "content": "You are a helpful assistant."}]
+        return [{"role":"system", "content":INITIAL_PROMPT}]
